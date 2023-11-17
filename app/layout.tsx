@@ -25,8 +25,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang='en' className={poppins.variable}>
-      <body>
+    <html lang='en' suppressHydrationWarning>
+      <body className={poppins.variable}>
         <Theme appearance='light' accentColor='blue'>
           <NavBar />
           <main className='p-5'>{children}</main>

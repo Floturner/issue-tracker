@@ -14,7 +14,7 @@ export async function POST(req: Request) {
     return Response.json(validation.error.errors, { status: 400 });
   }
 
-  const issue = prisma.issue.create({
+  const issue = await prisma.issue.create({
     data: { ...validation.data },
   });
 
