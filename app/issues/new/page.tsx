@@ -1,5 +1,6 @@
 'use client';
 
+import ErrorMessage from '@/app/components/ErrorMessage';
 import { createIssueSchema } from '@/app/validationSchemas';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Button, Callout, Text, TextField } from '@radix-ui/themes';
@@ -47,11 +48,7 @@ export default function NewIssuePage() {
           <TextField.Root>
             <TextField.Input placeholder='Title' {...register('title')} />
           </TextField.Root>
-          {errors.title && (
-            <Text as='p' color='red'>
-              {errors.title.message}
-            </Text>
-          )}
+          <ErrorMessage>{errors.title?.message}</ErrorMessage>
         </div>
         <div>
           <Controller
@@ -61,11 +58,7 @@ export default function NewIssuePage() {
               <SimpleMDE placeholder='Description' {...field} />
             )}
           />
-          {errors.description && (
-            <Text as='p' color='red'>
-              {errors.description.message}
-            </Text>
-          )}
+          <ErrorMessage>{errors.description?.message}</ErrorMessage>
         </div>
         <Button>Submit New Issue</Button>
       </form>
