@@ -2,8 +2,13 @@ import prisma from '@/prisma/client';
 import { z } from 'zod';
 
 const createIssueSchema = z.object({
-  title: z.string().min(1).max(255),
-  description: z.string().min(1),
+  title: z
+    .string({ required_error: 'Title is required.' })
+    .min(1, 'Title is required.')
+    .max(255, 'Title must contain at most 255 characters.'),
+  description: z
+    .string({ required_error: 'Title is required' })
+    .min(1, 'Description is required.'),
 });
 
 export async function POST(req: Request) {
@@ -11,7 +16,7 @@ export async function POST(req: Request) {
 
   const validation = createIssueSchema.safeParse(body);
   if (!validation.success) {
-    return Response.json(validation.error.errors, { status: 400 });
+    return Response.json(validation.error.format(), { status: 400 });
   }
 
   const issue = await prisma.issue.create({
