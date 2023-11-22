@@ -50,3 +50,7 @@ export default async function IssuesPage() {
     </Box>
   );
 }
+
+/* Route caching */
+// export const dynamic = 'force-dynamic';
+// export const revalidate = 0;

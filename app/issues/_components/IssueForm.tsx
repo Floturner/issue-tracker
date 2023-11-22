@@ -6,18 +6,17 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { Issue } from '@prisma/client';
 import { Button, Callout, TextField } from '@radix-ui/themes';
 import axios from 'axios';
-import 'easymde/dist/easymde.min.css';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
-import { Controller, useForm } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
-const SimpleMDE = dynamic(() => import('react-simplemde-editor'), {
+const IssueDescriptionField = dynamic(() => import('./IssueDescriptionFIeld'), {
   ssr: false,
 });
 
-type IssueFormData = z.infer<typeof issueSchema>;
+export type IssueFormData = z.infer<typeof issueSchema>;
 
 export default function IssueForm({ issue }: { issue?: Issue }) {
   const router = useRouter();
@@ -35,8 +34,13 @@ export default function IssueForm({ issue }: { issue?: Issue }) {
   const onSubmit = handleSubmit(async (data) => {
     try {
       setIsSubmitting(true);
-      await axios.post('/api/issues', data);
+      if (issue) {
+        await axios.patch(`/api/issues/${issue.id}`, data);
+      } else {
+        await axios.post('/api/issues', data);
+      }
       router.push('/issues');
+      router.refresh();
     } catch (err) {
       setIsSubmitting(false);
       setError('An unexpected error occured.');
@@ -62,23 +66,15 @@ export default function IssueForm({ issue }: { issue?: Issue }) {
           <ErrorMessage>{errors.title?.message}</ErrorMessage>
         </div>
         <div>
-          <Controller
-            name='description'
+          <IssueDescriptionField
             control={control}
-            render={({ field }) => (
-              <SimpleMDE
-                defaultValue={issue?.description}
-                placeholder='Description'
-                {...field}
-              />
-            )}
+            description={issue?.description}
           />
           <ErrorMessage>{errors.description?.message}</ErrorMessage>
         </div>
-
         <Button disabled={isSubmitting}>
           {isSubmitting && <Spinner />}
-          Submit New Issue
+          {issue ? 'Update Issue' : 'Create Issue'}
         </Button>
       </form>
     </div>
