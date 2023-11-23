@@ -1,6 +1,6 @@
 import prisma from '@/prisma/client';
 import { Box, Table, Text } from '@radix-ui/themes';
-import { IssueStatusBadge, Link } from '../components';
+import { IssueStatusBadge, Link } from '../../components';
 import IssueActions from './IssueActions';
 
 export default async function IssuesPage() {
