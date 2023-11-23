@@ -1,13 +1,15 @@
 import { Skeleton } from '@/app/components';
-import { Table } from '@radix-ui/themes';
-import IssueActions from './IssueActions';
+import { Box, Flex, Table } from '@radix-ui/themes';
 
 export default function LoadingIssuesPage() {
   const issues = [1, 2, 3, 4, 5];
 
   return (
-    <div>
-      <IssueActions />
+    <Box>
+      <Flex mb='5' justify='between'>
+        <Skeleton height='2rem' width='8rem' />
+        <Skeleton height='2rem' width='8rem' />
+      </Flex>
       <Table.Root variant='surface'>
         <Table.Header>
           <Table.Row>
@@ -39,6 +41,6 @@ export default function LoadingIssuesPage() {
           ))}
         </Table.Body>
       </Table.Root>
-    </div>
+    </Box>
   );
 }

@@ -1,14 +1,39 @@
 import prisma from '@/prisma/client';
-import { Box, Table, Text } from '@radix-ui/themes';
+import { Status } from '@prisma/client';
+import { Box, Button, Flex, Table, Text } from '@radix-ui/themes';
+import delay from 'delay';
+import NextLink from 'next/link';
 import { IssueStatusBadge, Link } from '../../components';
-import IssueActions from './IssueActions';
+import IssueStatusFilter from './IssueStatusFilter';
 
-export default async function IssuesPage() {
-  const issues = await prisma.issue.findMany();
+type Props = {
+  searchParams: { status: Status };
+};
+
+export default async function IssuesPage({ searchParams }: Props) {
+  const statuses = Object.values(Status);
+  const status = statuses.includes(searchParams.status)
+    ? searchParams.status
+    : undefined;
+  const issues = await prisma.issue.findMany({
+    where: { status },
+  });
+
+  await delay(5000);
 
   return (
     <Box>
-      <IssueActions />
+      <Flex mb='5' justify='between'>
+        <IssueStatusFilter defaultValue={status ?? 'ALL'} />
+        <Button>
+          <NextLink
+            className='flex justify-center items-center w-full h-full'
+            href='/issues/new'
+          >
+            New Issue
+          </NextLink>
+        </Button>
+      </Flex>
       <Table.Root variant='surface'>
         <Table.Header>
           <Table.Row>
@@ -50,7 +75,3 @@ export default async function IssuesPage() {
     </Box>
   );
 }
-
-/* Route caching */
-// export const dynamic = 'force-dynamic';
-// export const revalidate = 0;
