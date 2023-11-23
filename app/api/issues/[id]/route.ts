@@ -2,11 +2,14 @@ import { issueSchema } from '@/app/validationSchemas';
 import prisma from '@/prisma/client';
 import { Status } from '@prisma/client';
 
-type Props = {
-  params: { id: string };
-};
-
-export async function PATCH(req: Request, { params }: Props) {
+export async function PATCH(
+  req: Request,
+  {
+    params,
+  }: {
+    params: { id: string };
+  }
+) {
   const body = await req.json();
 
   const validation = issueSchema.safeParse(body);
@@ -34,3 +37,12 @@ export async function PATCH(req: Request, { params }: Props) {
 
   return Response.json(updatedIssue);
 }
+
+export function DELETE(
+  req: Request,
+  {
+    params,
+  }: {
+    params: { id: string };
+  }
+) {}

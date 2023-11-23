@@ -1,4 +1,4 @@
-import { Theme } from '@radix-ui/themes';
+import { Container, Theme } from '@radix-ui/themes';
 import '@radix-ui/themes/styles.css';
 import type { Metadata } from 'next';
 import { Poppins } from 'next/font/google';
@@ -29,7 +29,9 @@ export default function RootLayout({
       <body className={poppins.variable}>
         <Theme appearance='light' accentColor='blue'>
           <NavBar />
-          <main className='p-5'>{children}</main>
+          <Container>
+            <main className='p-5'>{children}</main>
+          </Container>
         </Theme>
       </body>
     </html>
