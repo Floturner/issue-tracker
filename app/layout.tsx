@@ -3,9 +3,10 @@ import '@radix-ui/themes/styles.css';
 import type { Metadata } from 'next';
 import { Montserrat } from 'next/font/google';
 import NavBar from './NavBar';
+import QueryClientProvider from './QueryClientProvider';
+import AuthProvider from './auth/Provider';
 import './theme-config.css';
 // After theme-config.css
-import AuthProvider from './auth/Provider';
 import './globals.css';
 
 const montserrat = Montserrat({
@@ -28,14 +29,16 @@ export default function RootLayout({
   return (
     <html lang='en'>
       <body className={montserrat.variable}>
-        <AuthProvider>
-          <Theme appearance='light' accentColor='blue'>
-            <NavBar />
-            <Container>
-              <main className='p-5'>{children}</main>
-            </Container>
-          </Theme>
-        </AuthProvider>
+        <QueryClientProvider>
+          <AuthProvider>
+            <Theme appearance='light' accentColor='blue'>
+              <NavBar />
+              <Container>
+                <main className='p-5'>{children}</main>
+              </Container>
+            </Theme>
+          </AuthProvider>
+        </QueryClientProvider>
       </body>
     </html>
   );
