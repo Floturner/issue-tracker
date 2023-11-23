@@ -32,7 +32,7 @@ export default function DeleteIssueButton({ issueId }: Props) {
     <>
       <AlertDialog.Root>
         <AlertDialog.Trigger>
-          <Button color='red' disabled={isDeleting}>
+          <Button className='!cursor-pointer' color='red' disabled={isDeleting}>
             {isDeleting ? <Spinner /> : <CrossCircledIcon />}
             Delete Issue
           </Button>

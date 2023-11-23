@@ -5,7 +5,12 @@ export default function IssueActions() {
   return (
     <div className='mb-5'>
       <Button>
-        <Link href='/issues/new'>New Issue</Link>
+        <Link
+          className='flex justify-center items-center w-full h-full'
+          href='/issues/new'
+        >
+          New Issue
+        </Link>
       </Button>
     </div>
   );
