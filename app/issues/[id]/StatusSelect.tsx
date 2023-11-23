@@ -15,18 +15,15 @@ type Props = {
 export default function StatusSelect({ issue }: Props) {
   const router = useRouter();
 
+  function updateIssueStatus(status: Status) {
+    axios
+      .patch<any, any, PatchIssueDto>(`/api/issues/${issue.id}`, { status })
+      .then(() => router.refresh())
+      .catch(() => toast.error('Changes could not be saved.'));
+  }
+
   return (
-    <Select.Root
-      defaultValue={issue.status}
-      onValueChange={(status) => {
-        axios
-          .patch<any, any, PatchIssueDto>(`/api/issues/${issue.id}`, {
-            status: status as Status,
-          })
-          .then(() => router.refresh())
-          .catch(() => toast.error('Changes could not be saved.'));
-      }}
-    >
+    <Select.Root defaultValue={issue.status} onValueChange={updateIssueStatus}>
       <Select.Trigger placeholder='Status' />
       <Select.Content>
         <Select.Group>
