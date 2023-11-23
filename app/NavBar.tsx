@@ -47,7 +47,7 @@ function NavLinks() {
         <li key={link.href}>
           <Link
             className={classNames({
-              'text-zinc-900': link.href === path,
+              'text-zinc-900 font-semibold': link.href === path,
               'nav-link': link.href !== path,
             })}
             href={link.href}

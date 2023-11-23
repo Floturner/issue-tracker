@@ -1,6 +1,8 @@
+import authOptions from '@/app/auth/authOptions';
 import { issueSchema } from '@/app/validationSchemas';
 import prisma from '@/prisma/client';
 import { Status } from '@prisma/client';
+import { getServerSession } from 'next-auth';
 
 export async function PATCH(
   req: Request,
@@ -10,6 +12,11 @@ export async function PATCH(
     params: { id: string };
   }
 ) {
+  const session = await getServerSession(authOptions);
+  if (!session) {
+    return Response.json({ error: 'Please, login first.' }, { status: 401 });
+  }
+
   const body = await req.json();
 
   const validation = issueSchema.safeParse(body);
@@ -46,6 +53,11 @@ export async function DELETE(
     params: { id: string };
   }
 ) {
+  const session = await getServerSession(authOptions);
+  if (!session) {
+    return Response.json({ error: 'Please, login first.' }, { status: 401 });
+  }
+
   const issue = await prisma.issue.findUnique({
     where: { id: parseInt(params.id, 10) },
   });
