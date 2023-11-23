@@ -1,99 +1,49 @@
+import Pagination from '@/app/components/Pagination';
 import prisma from '@/prisma/client';
-import { Issue, Status } from '@prisma/client';
-import { ArrowDownIcon, ArrowUpIcon } from '@radix-ui/react-icons';
-import { Box, Table, Text } from '@radix-ui/themes';
-import NextLink from 'next/link';
-import { IssueStatusBadge, Link } from '../../components';
+import { Status } from '@prisma/client';
+import { Flex } from '@radix-ui/themes';
 import IssueActions from './IssueActions';
+import IssueTable, {
+  IssueQuery,
+  OrderBy,
+  SortOrder,
+  columnNames,
+  sortOrders,
+} from './IssueTable';
 
-const columns: { label: string; value: keyof Issue; className?: string }[] = [
-  { label: 'Issue', value: 'title' },
-  { label: 'Status', value: 'status', className: 'hidden md:table-cell' },
-  { label: 'Created', value: 'createdAt', className: 'hidden md:table-cell' },
-];
+const pageSize = 10;
 
-const sortOrders = ['asc', 'desc'] as const;
-type SortOrder = (typeof sortOrders)[number];
-type OrderBy = { [Property in keyof Issue]?: SortOrder };
 type Props = {
-  searchParams: {
-    status: Status;
-    sortBy: keyof Issue;
-    sortOrder?: SortOrder;
-  };
+  searchParams: IssueQuery;
 };
 
 export default async function IssuesPage({ searchParams }: Props) {
-  const { status, orderBy } = validateQueryParams(searchParams);
+  const { status, orderBy, page } = validateQueryParams(searchParams);
+  const where = { status };
 
-  const issues = await prisma.issue.findMany({
-    where: { status },
-    orderBy,
-  });
+  const [issues, issueCount] = await Promise.all([
+    prisma.issue.findMany({
+      where,
+      orderBy,
+      skip: (page - 1) * pageSize,
+      take: pageSize,
+    }),
+    prisma.issue.count({ where, orderBy }),
+  ]);
 
   return (
-    <Box>
+    <Flex direction='column' gap='5'>
       <IssueActions />
-      <Table.Root variant='surface'>
-        <Table.Header>
-          <Table.Row>
-            {columns.map((col) => (
-              <Table.ColumnHeaderCell key={col.value} className={col.className}>
-                <NextLink
-                  href={{
-                    query: {
-                      ...searchParams,
-                      sortBy: col.value,
-                      sortOrder:
-                        searchParams.sortOrder === 'desc' ? 'asc' : 'desc',
-                    } as Props['searchParams'],
-                  }}
-                >
-                  {col.value === searchParams.sortBy &&
-                    (searchParams.sortOrder !== 'desc' ? (
-                      <ArrowUpIcon className='inline' />
-                    ) : (
-                      <ArrowDownIcon className='inline' />
-                    ))}
-                  {col.label}
-                </NextLink>
-              </Table.ColumnHeaderCell>
-            ))}
-          </Table.Row>
-        </Table.Header>
-        <Table.Body>
-          {!issues.length && (
-            <Table.Row>
-              <Table.Cell className='col-span-1 md:col-span-3'>
-                <Text>No issues found.</Text>
-              </Table.Cell>
-            </Table.Row>
-          )}
-          {issues.map((issue) => (
-            <Table.Row key={issue.id}>
-              <Table.Cell>
-                <Link href={`/issues/${issue.id}`}>{issue.title}</Link>
-                <div className='block md:hidden'>
-                  <IssueStatusBadge status={issue.status} />
-                </div>
-              </Table.Cell>
-              <Table.Cell className='hidden md:table-cell'>
-                <IssueStatusBadge status={issue.status} />
-              </Table.Cell>
-              <Table.Cell className='hidden md:table-cell'>
-                {issue.createdAt.toDateString()}
-              </Table.Cell>
-            </Table.Row>
-          ))}
-        </Table.Body>
-      </Table.Root>
-    </Box>
+      <IssueTable issues={issues} searchParams={searchParams} />
+      <Pagination currentPage={page} itemCount={issueCount} pageSize={10} />
+    </Flex>
   );
 }
 
 function validateQueryParams(params: Props['searchParams']): {
   status?: Status;
   orderBy?: OrderBy;
+  page: number;
 } {
   const statuses = Object.values(Status);
   const status = statuses.includes(params.status) ? params.status : undefined;
@@ -104,9 +54,12 @@ function validateQueryParams(params: Props['searchParams']): {
       : 'asc';
 
   let orderBy: OrderBy | undefined = undefined;
-  if (columns.map((col) => col.value).includes(params.sortBy)) {
+  if (columnNames.includes(params.sortBy)) {
     orderBy = { [params.sortBy]: sortOrder };
   }
 
-  return { status, orderBy };
+  let page = parseInt(params.page, 10);
+  page = isNaN(page) ? 1 : page;
+
+  return { status, orderBy, page };
 }
