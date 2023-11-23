@@ -1,6 +1,5 @@
 import { issueSchema } from '@/app/validationSchemas';
 import prisma from '@/prisma/client';
-import { Status } from '@prisma/client';
 
 export async function POST(req: Request) {
   const body = await req.json();
@@ -18,4 +17,10 @@ export async function POST(req: Request) {
   });
 
   return Response.json(issue, { status: 201 });
+}
+
+export async function GET(req: Request) {
+  const issues = await prisma.issue.findMany({});
+
+  return Response.json(issues);
 }
