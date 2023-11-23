@@ -6,6 +6,7 @@ import { Issue, Status } from '@prisma/client';
 import { Select } from '@radix-ui/themes';
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
+import toast from 'react-hot-toast';
 
 type Props = {
   issue: Issue;
@@ -17,11 +18,13 @@ export default function StatusSelect({ issue }: Props) {
   return (
     <Select.Root
       defaultValue={issue.status}
-      onValueChange={async (status) => {
-        await axios.patch<any, any, PatchIssueDto>(`/api/issues/${issue.id}`, {
-          status: status as Status,
-        });
-        router.refresh();
+      onValueChange={(status) => {
+        axios
+          .patch<any, any, PatchIssueDto>(`/api/issues/${issue.id}`, {
+            status: status as Status,
+          })
+          .then(() => router.refresh())
+          .catch(() => toast.error('Changes could not be saved.'));
       }}
     >
       <Select.Trigger placeholder='Status' />

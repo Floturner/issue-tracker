@@ -2,6 +2,7 @@ import { Container, Theme } from '@radix-ui/themes';
 import '@radix-ui/themes/styles.css';
 import type { Metadata } from 'next';
 import { Montserrat } from 'next/font/google';
+import { Toaster } from 'react-hot-toast';
 import NavBar from './NavBar';
 import QueryClientProvider from './QueryClientProvider';
 import AuthProvider from './auth/Provider';
@@ -39,6 +40,7 @@ export default function RootLayout({
             </Theme>
           </AuthProvider>
         </QueryClientProvider>
+        <Toaster />
       </body>
     </html>
   );
