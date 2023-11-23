@@ -5,6 +5,7 @@ import { Poppins } from 'next/font/google';
 import NavBar from './NavBar';
 import './theme-config.css';
 // After theme-config.css
+import AuthProvider from './auth/Provider';
 import './globals.css';
 
 const poppins = Poppins({
@@ -25,14 +26,16 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang='en' suppressHydrationWarning>
+    <html lang='en'>
       <body className={poppins.variable}>
-        <Theme appearance='light' accentColor='blue'>
-          <NavBar />
-          <Container>
-            <main className='p-5'>{children}</main>
-          </Container>
-        </Theme>
+        <AuthProvider>
+          <Theme appearance='light' accentColor='blue'>
+            <NavBar />
+            <Container>
+              <main className='p-5'>{children}</main>
+            </Container>
+          </Theme>
+        </AuthProvider>
       </body>
     </html>
   );
