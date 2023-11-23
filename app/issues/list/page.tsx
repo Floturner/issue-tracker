@@ -1,10 +1,10 @@
 import prisma from '@/prisma/client';
 import { Issue, Status } from '@prisma/client';
 import { ArrowDownIcon, ArrowUpIcon } from '@radix-ui/react-icons';
-import { Box, Button, Flex, Table, Text } from '@radix-ui/themes';
+import { Box, Table, Text } from '@radix-ui/themes';
 import NextLink from 'next/link';
 import { IssueStatusBadge, Link } from '../../components';
-import IssueStatusFilter from './IssueStatusFilter';
+import IssueActions from './IssueActions';
 
 const columns: { label: string; value: keyof Issue; className?: string }[] = [
   { label: 'Issue', value: 'title' },
@@ -12,14 +12,14 @@ const columns: { label: string; value: keyof Issue; className?: string }[] = [
   { label: 'Created', value: 'createdAt', className: 'hidden md:table-cell' },
 ];
 
-const orders = ['asc', 'desc'] as const;
-type Order = (typeof orders)[number];
-type OrderBy = { [Property in keyof Issue]?: Order };
+const sortOrders = ['asc', 'desc'] as const;
+type SortOrder = (typeof sortOrders)[number];
+type OrderBy = { [Property in keyof Issue]?: SortOrder };
 type Props = {
   searchParams: {
     status: Status;
-    orderBy: keyof Issue;
-    order?: Order;
+    sortBy: keyof Issue;
+    sortOrder?: SortOrder;
   };
 };
 
@@ -33,17 +33,7 @@ export default async function IssuesPage({ searchParams }: Props) {
 
   return (
     <Box>
-      <Flex mb='5' justify='between'>
-        <IssueStatusFilter defaultValue={status ?? 'ALL'} />
-        <Button>
-          <NextLink
-            className='flex justify-center items-center w-full h-full'
-            href='/issues/new'
-          >
-            New Issue
-          </NextLink>
-        </Button>
-      </Flex>
+      <IssueActions />
       <Table.Root variant='surface'>
         <Table.Header>
           <Table.Row>
@@ -53,13 +43,14 @@ export default async function IssuesPage({ searchParams }: Props) {
                   href={{
                     query: {
                       ...searchParams,
-                      orderBy: col.value,
-                      order: searchParams.order === 'desc' ? 'asc' : 'desc',
+                      sortBy: col.value,
+                      sortOrder:
+                        searchParams.sortOrder === 'desc' ? 'asc' : 'desc',
                     } as Props['searchParams'],
                   }}
                 >
-                  {col.value === searchParams.orderBy &&
-                    (searchParams.order !== 'desc' ? (
+                  {col.value === searchParams.sortBy &&
+                    (searchParams.sortOrder !== 'desc' ? (
                       <ArrowUpIcon className='inline' />
                     ) : (
                       <ArrowDownIcon className='inline' />
@@ -107,12 +98,14 @@ function validateQueryParams(params: Props['searchParams']): {
   const statuses = Object.values(Status);
   const status = statuses.includes(params.status) ? params.status : undefined;
 
-  const order: Order =
-    params.order && orders.includes(params.order) ? params.order : 'asc';
+  const sortOrder: SortOrder =
+    params.sortOrder && sortOrders.includes(params.sortOrder)
+      ? params.sortOrder
+      : 'asc';
 
   let orderBy: OrderBy | undefined = undefined;
-  if (columns.map((col) => col.value).includes(params.orderBy)) {
-    orderBy = { [params.orderBy]: order };
+  if (columns.map((col) => col.value).includes(params.sortBy)) {
+    orderBy = { [params.sortBy]: sortOrder };
   }
 
   return { status, orderBy };
