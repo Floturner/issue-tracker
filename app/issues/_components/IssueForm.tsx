@@ -6,15 +6,12 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { Issue } from '@prisma/client';
 import { Button, Callout, TextField } from '@radix-ui/themes';
 import axios from 'axios';
-import dynamic from 'next/dynamic';
+import 'easymde/dist/easymde.min.css';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
-import { useForm } from 'react-hook-form';
+import { Controller, useForm } from 'react-hook-form';
+import SimpleMDE from 'react-simplemde-editor';
 import { z } from 'zod';
-
-const IssueDescriptionField = dynamic(() => import('./IssueDescriptionFIeld'), {
-  ssr: false,
-});
 
 export type IssueFormData = z.infer<typeof issueSchema>;
 
@@ -66,9 +63,13 @@ export default function IssueForm({ issue }: { issue?: Issue }) {
           <ErrorMessage>{errors.title?.message}</ErrorMessage>
         </div>
         <div>
-          <IssueDescriptionField
+          <Controller
+            name='description'
             control={control}
-            description={issue?.description}
+            defaultValue={issue?.description}
+            render={({ field }) => (
+              <SimpleMDE placeholder='Description' {...field} />
+            )}
           />
           <ErrorMessage>{errors.description?.message}</ErrorMessage>
         </div>

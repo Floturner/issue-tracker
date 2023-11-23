@@ -11,5 +11,5 @@ export const issueSchema = z.object({
     .min(1, 'Description is required.'),
   status: z
     .nativeEnum(Status, { invalid_type_error: `Status is invalid.` })
-    .nullable(),
+    .nullish(),
 });
