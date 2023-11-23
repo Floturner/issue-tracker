@@ -7,6 +7,7 @@ import AssigneeSelect from './AssigneeSelect';
 import DeleteIssueButton from './DeleteIssueButton';
 import EditIssueButton from './EditIssueButton';
 import IssueDetails from './IssueDetails';
+import StatusSelect from './StatusSelect';
 
 type Props = {
   params: { id: string };
@@ -28,7 +29,8 @@ export default async function IssueDetailPage({ params }: Props) {
       </Box>
       {session && (
         <Box className='flex flex-col gap-5'>
-          <AssigneeSelect />
+          <StatusSelect issue={issue} />
+          <AssigneeSelect issue={issue} />
           <EditIssueButton issueId={issue.id} />
           <DeleteIssueButton issueId={issue.id} />
         </Box>

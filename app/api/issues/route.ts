@@ -1,5 +1,5 @@
 import authOptions from '@/app/auth/authOptions';
-import { issueSchema } from '@/app/validationSchemas';
+import { createIssueSchema } from '@/app/validationSchemas';
 import prisma from '@/prisma/client';
 import { getServerSession } from 'next-auth';
 
@@ -11,7 +11,7 @@ export async function POST(req: Request) {
 
   const body = await req.json();
 
-  const validation = issueSchema.safeParse(body);
+  const validation = createIssueSchema.safeParse(body);
   if (!validation.success) {
     return Response.json(validation.error.format(), { status: 400 });
   }
@@ -24,10 +24,4 @@ export async function POST(req: Request) {
   });
 
   return Response.json(issue, { status: 201 });
-}
-
-export async function GET(req: Request) {
-  const issues = await prisma.issue.findMany({});
-
-  return Response.json(issues);
 }

@@ -8,3 +8,5 @@ export const statusMap: Record<
   IN_PROGRESS: { label: 'In Progress', color: 'yellow' },
   CLOSED: { label: 'Closed', color: 'green' },
 };
+
+export const statusList = Object.entries(statusMap);
