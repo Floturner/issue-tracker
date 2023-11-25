@@ -19,7 +19,6 @@ export default async function EditIssuePage({ params }: Props) {
   if (isNaN(id)) notFound();
 
   const issue = await prisma.issue.findUnique({ where: { id } });
-
   if (!issue) notFound();
 
   return <IssueForm issue={issue} />;
