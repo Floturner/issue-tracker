@@ -16,7 +16,7 @@ export default async function LatestIssues() {
       <Table.Header>
         <Table.Row>
           <Table.Cell>
-            <Heading size='4' my='2'>
+            <Heading size='4' my='1'>
               Latest Issues
             </Heading>
           </Table.Cell>
@@ -26,7 +26,7 @@ export default async function LatestIssues() {
         {issues.map((issue) => (
           <Table.Row key={issue.id}>
             <Table.Cell>
-              <Flex justify='between' align='center'>
+              <Flex justify='between' align='center' gap='5'>
                 <Flex direction='column' align='start' gap='2'>
                   <Link href={`/issues/${issue.id}`}>{issue.title}</Link>
                   <IssueStatusBadge status={issue.status} />
