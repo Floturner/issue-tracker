@@ -27,8 +27,4 @@ export default async function EditIssuePage({ params }: Props) {
 export const metadata: Metadata = {
   title: `Edit Issue - ${APP_NAME}`,
   description: 'Update an issue.',
-  openGraph: {
-    title: `Edit Issue - ${APP_NAME}`,
-    description: 'Update an issue.',
-  },
 };

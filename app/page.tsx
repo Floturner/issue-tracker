@@ -38,8 +38,4 @@ export default async function Home() {
 export const metadata: Metadata = {
   title: `Dashboard - ${APP_NAME}`,
   description: 'View a summary of project issues.',
-  openGraph: {
-    title: `Dashboard - ${APP_NAME}`,
-    description: 'View a summary of project issues.',
-  },
 };

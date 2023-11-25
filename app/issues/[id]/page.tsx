@@ -50,9 +50,5 @@ export async function generateMetadata({ params }: Props) {
   return {
     title: `${issue.title} - ${APP_NAME}`,
     description: `Details of issue ${issue.id}.`,
-    openGraph: {
-      title: `Dashboard - ${APP_NAME}`,
-      description: `Details of issue ${issue.id}.`,
-    },
   };
 }

@@ -15,8 +15,4 @@ export default function NewIssuePage() {
 export const metadata: Metadata = {
   title: `New Issue - ${APP_NAME}`,
   description: 'Create a new issue.',
-  openGraph: {
-    title: `New Issue - ${APP_NAME}`,
-    description: 'Create a new issue.',
-  },
 };
