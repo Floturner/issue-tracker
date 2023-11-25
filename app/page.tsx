@@ -1,8 +1,10 @@
 import prisma from '@/prisma/client';
 import { Flex, Grid } from '@radix-ui/themes';
+import { Metadata } from 'next';
 import IssueChart from './IssueChart';
 import IssueSummary from './IssueSummary';
 import LatestIssues from './LatestIssues';
+import { APP_NAME } from './layout';
 
 export type StatData = {
   open: number;
@@ -32,3 +34,12 @@ export default async function Home() {
     </Grid>
   );
 }
+
+export const metadata: Metadata = {
+  title: `Dashboard - ${APP_NAME}`,
+  description: 'View a summary of project issues.',
+  openGraph: {
+    title: `Dashboard - ${APP_NAME}`,
+    description: 'View a summary of project issues.',
+  },
+};

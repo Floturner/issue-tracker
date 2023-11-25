@@ -17,9 +17,15 @@ const montserrat = Montserrat({
   variable: '--font-montserrat',
 });
 
+export const APP_NAME = 'Issue Tracker';
+
 export const metadata: Metadata = {
-  title: 'Issue Tracker',
+  title: APP_NAME,
   description: 'An app to track issues.',
+  openGraph: {
+    title: APP_NAME,
+    description: 'An app to track issues.',
+  },
 };
 
 export default function RootLayout({

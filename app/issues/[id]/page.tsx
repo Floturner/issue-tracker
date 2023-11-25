@@ -1,4 +1,5 @@
 import authOptions from '@/app/auth/authOptions';
+import { APP_NAME } from '@/app/layout';
 import prisma from '@/prisma/client';
 import { Box, Grid } from '@radix-ui/themes';
 import { getServerSession } from 'next-auth';
@@ -37,4 +38,20 @@ export default async function IssueDetailPage({ params }: Props) {
       )}
     </Grid>
   );
+}
+
+export async function generateMetadata({ params }: Props) {
+  const id = parseInt(params.id, 10);
+  if (isNaN(id)) notFound();
+  const issue = await prisma.issue.findUnique({ where: { id } });
+  if (!issue) notFound();
+
+  return {
+    title: `${issue.title} - ${APP_NAME}`,
+    description: `Details of issue ${issue.id}.`,
+    openGraph: {
+      title: `Dashboard - ${APP_NAME}`,
+      description: `Details of issue ${issue.id}.`,
+    },
+  };
 }

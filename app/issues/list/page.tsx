@@ -1,7 +1,9 @@
 import Pagination from '@/app/components/Pagination';
+import { APP_NAME } from '@/app/layout';
 import prisma from '@/prisma/client';
 import { Status } from '@prisma/client';
 import { Flex } from '@radix-ui/themes';
+import { Metadata } from 'next';
 import IssueActions from './IssueActions';
 import IssueTable, {
   IssueQuery,
@@ -63,3 +65,12 @@ function validateQueryParams(params: Props['searchParams']): {
 
   return { status, orderBy, page };
 }
+
+export const metadata: Metadata = {
+  title: `Issue List - ${APP_NAME}`,
+  description: 'View all project issues.',
+  openGraph: {
+    title: `Issue List - ${APP_NAME}`,
+    description: 'View all project issues.',
+  },
+};
