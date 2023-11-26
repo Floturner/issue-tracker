@@ -55,7 +55,7 @@ function validateQueryParams(params: Props['searchParams']): {
       ? params.sortOrder
       : 'asc';
 
-  let orderBy: OrderBy | undefined = undefined;
+  let orderBy: OrderBy = { createdAt: 'desc' };
   if (columnNames.includes(params.sortBy)) {
     orderBy = { [params.sortBy]: sortOrder };
   }
