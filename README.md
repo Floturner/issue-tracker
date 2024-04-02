@@ -1,6 +1,6 @@
 # Issue Tracker
 
-**Issue Tracker** is a modern, full-stack, production-grade issue tracker application built with Next.js (app router), Tailwind, Radix UI, Prisma, and NextAuth.js.
+**Issue Tracker** is a modern, full-featured, production-grade issue tracking application built with Next.js (app router), Tailwind, Radix UI, Prisma, and NextAuth.js.
 
 ## Screenshots
 
